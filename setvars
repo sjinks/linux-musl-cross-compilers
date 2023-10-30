@@ -31,7 +31,7 @@ arch=$(docker_arch_to_alpine_arch "$1")
 
 for i in /usr/bin/"${hostspec}"-*; do
     if [ -f "$i" ]; then
-        ln -sf "$i" "${i#"${hostspec}"-}"
+        ln -sf "$i" "/usr/bin/${i#"/usr/bin/${hostspec}"-}"
     fi
 done
 
