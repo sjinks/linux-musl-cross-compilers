@@ -1,0 +1,46 @@
+#!/bin/sh
+
+docker_arch_to_hostspec() {
+    case "$1" in
+        linux/arm64)    echo "aarch64-linux-musl" ;;
+        linux/arm/v6)   echo "armv6-linux-musleabihf" ;;
+        linux/arm/v7)   echo "armv7l-linux-musleabihf" ;;
+        linux/ppc64le)  echo "powerpc64le-linux-musl" ;;
+        linux/s390x)    echo "s390x-linux-musl" ;;
+        linux/386)      echo "i686-linux-musl" ;;
+        linux/amd64)    echo "x86_64-linux-musl" ;;
+        *)              exit 1 ;;
+    esac
+}
+
+docker_arch_to_alpine_arch() {
+    case "$1" in
+        linux/arm64)    echo "aarch64" ;;
+        linux/arm/v6)   echo "armhf" ;;
+        linux/arm/v7)   echo "armv7" ;;
+        linux/ppc64le)  echo "ppc64le" ;;
+        linux/s390x)    echo "s390x" ;;
+        linux/386)      echo "x86" ;;
+        linux/amd64)    echo "x86_64" ;;
+        *)              exit 1 ;;
+    esac
+}
+
+hostspec=$(docker_arch_to_hostspec "$1")
+arch=$(docker_arch_to_alpine_arch "$1")
+
+for i in /usr/bin/"${hostspec}"-*; do
+    if [ -f "$i" ]; then
+        ln -sf "$i" "/usr/bin/${i#"${hostspec}"-}"
+    fi
+done
+
+ln -sf /usr/bin/gcc /usr/bin/cc
+ln -sf /usr/bin/g++ /usr/bin/c++
+
+echo "export APK_ROOT=/${hostspec}"
+echo "export APK_ARCH=${arch}"
+echo "export PKG_CONFIG_LIBDIR=/${hostspec}/usr/lib/pkgconfig"
+echo "export PKG_CONFIG_SYSROOT_DIR=/${hostspec}"
+echo "export HOSTSPEC=${hostspec}"
+echo "export ARCHITECTURE=${arch}"
