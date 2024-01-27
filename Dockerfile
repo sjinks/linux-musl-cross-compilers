@@ -1,4 +1,4 @@
-FROM alpine:3.16.6@sha256:cbe5d5973103a2d03408d1689a6efde4ea4920bde9f4b51fe7872e60ce2d8e56
+FROM alpine:3.19.1@sha256:c5b1261d6d3e43071626931fc004f70149baeba2c8ec672bd4f27761f8e1ad6b
 RUN \
     wget -q http://more.musl.cc/x86_64-linux-musl/aarch64-linux-musl-cross.tgz      -O - | tar -xz --strip-components=1 -f - -C /usr && \
     wget -q http://more.musl.cc/x86_64-linux-musl/armv6-linux-musleabihf-cross.tgz  -O - | tar -xz --strip-components=1 -f - -C /usr && \
