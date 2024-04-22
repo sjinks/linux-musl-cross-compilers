@@ -10,6 +10,8 @@ on:
 
 jobs:
   update-description:
+    permissions:
+      contents: read
     name: Update DockerHub Description
     runs-on: ubuntu-latest
     steps:
